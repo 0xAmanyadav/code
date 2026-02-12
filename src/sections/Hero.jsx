@@ -85,7 +85,9 @@ function Hero() {
         {/* Role typing */}
         <h2 className="mt-4 text-xl md:text-2xl text-gray-300 font-mono h-8">
           {roleText}
-          <span className="text-green-400 animate-pulse">|</span>
+          <span className="text-green-400 animate-pulse">|
+            
+          </span>
         </h2>
 
         {/* Description */}
