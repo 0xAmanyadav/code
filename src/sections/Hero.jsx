@@ -93,7 +93,7 @@ function Hero() {
         {/* Description */}
         <p className="mt-6 text-gray-400">
           Cyber Security professional focused on offensive and defensive
-          security. Hands-on with labs, CTFs, and real-world tooling.
+          security. Hands-on with labs,CTFs, and real-world tooling.
         </p>
 
         {/* Buttons */}
