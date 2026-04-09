@@ -1,18 +1,18 @@
 import { motion } from "framer-motion";
 
 const tools = [
-  { name: "Nmap", logo: "/public/Tools_logo/n.png" },
-  { name: "Burp Suite", logo: "/public/Tools_logo/burp.png" },
-  { name: "Wireshark", logo: "/public/Tools_logo/wire.png" },
-  { name: "Metasploit", logo: "/public/Tools_logo/meta2.png" },
-  { name: "Splunk", logo: "/public/Tools_logo/splank (2).png" },
-  { name: "Sqlmap", logo: "/public/Tools_logo/sql.png" },
-  { name: "Nikto", logo: "/public/Tools_logo/nik.png" },
-  { name: "Kali Linux", logo: "/public/Tools_logo/kl.png" },
-  { name: "Hydra", logo: "/public/Tools_logo/hyd.png" },
-  { name: "Parrot OS", logo: "/public/Tools_logo/parrot.png" },
-  { name: "Aircrack-ng", logo: "/public/Tools_logo/air.png" },
-  { name: "John the Ripper", logo: "/public/Tools_logo/john.png" },
+  { name: "Nmap", logo: "Tools_logo/n.png" },
+  { name: "Burp Suite", logo: "Tools_logo/burp.png" },
+  { name: "Wireshark", logo: "Tools_logo/wire.png" },
+  { name: "Metasploit", logo: "Tools_logo/meta2.png" },
+  { name: "Splunk", logo: "Tools_logo/splank (2).png" },
+  { name: "Sqlmap", logo: "Tools_logo/sql.png" },
+  { name: "Nikto", logo: "Tools_logo/nik.png" },
+  { name: "Kali Linux", logo: "Tools_logo/kl.png" },
+  { name: "Hydra", logo: "Tools_logo/hyd.png" },
+  { name: "Parrot OS", logo: "Tools_logo/parrot.png" },
+  { name: "Aircrack-ng", logo: "Tools_logo/air.png" },
+  { name: "John the Ripper", logo: "Tools_logo/john.png" },
 ];
 
 export default function Tools() {
@@ -55,7 +55,7 @@ export default function Tools() {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.001 }}
               viewport={{ once: false }}
-              whileHover={{ scale: 1.3 }}   // 🔥 ZOOM IN
+              whileHover={{ scale: 1.3 }} // 🔥 ZOOM IN
               className="flex flex-col items-center"
             >
               {/* LOGO */}
