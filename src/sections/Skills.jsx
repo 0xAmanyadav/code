@@ -105,7 +105,7 @@ function SkillCard3D({ skill, mode }) {
 }
 
 /* =========================================================================
-   🌐 MAIN SKILLS SECTION COMPONENT
+   🌐 MAIN SKILLS SECTION COMPONEN
    ========================================================================= */
 export default function Skills() {
   const [mode, setMode] = useState("blue");
