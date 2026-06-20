@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 
-
 const roles = ["SOC Analyst", "Penetration Tester", "Blue Team Enthusiast"];
 
 function Hero() {
@@ -51,71 +50,69 @@ function Hero() {
   return (
     <section
       id="home"
-      className="relative h-screen w-screen flex items-center justify-center bg-black text-white overflow-hidden"
+      className="relative h-screen w-screen flex items-center justify-center bg-[#fafafa] text-gray-900 overflow-hidden font-sans"
     >
-      
-  {/* <CyberAttackMap /> */}
-    {/* <CyberGlobe /> */}
+      {/* ================= PREMIUM LIGHT CYBER BACKGROUND ================= */}
+      <div className="absolute inset-0 z-0">
+        {/* Soft centered ambient glow */}
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(63,81,181,0.06),transparent_70%)]" />
 
-      {/* ================= CYBER 3D BACKGROUND ================= */}
-      {/* <div className="absolute inset-0 z-0"> */}
-        {/* Grid */}
-        {/* <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(0,255,150,0.12),transparent_65%)]" /> */}
-
-        {/* Moving cyber lines */}
-        {/* <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(0,255,150,0.08)_1px,transparent_1px),linear-gradient(to_bottom,rgba(0,255,150,0.08)_1px,transparent_1px)] bg-[size:60px_60px] animate-[gridMove_20s_linear_infinite]" /> */}
-
-        {/* Scanline overlay */}
-        {/* <div className="absolute inset-0 bg-[linear-gradient(to_bottom,transparent_0%,rgba(0,0,0,0.4)_50%,transparent_100%)] opacity-30 animate-pulse" />
-      </div> */}
-
-      {/* ================= CONTENT ================= */}
+        {/* Clean, lightweight gray network grid */}
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(0,0,0,0.02)_1px,transparent_1px),linear-gradient(to_bottom,rgba(0,0,0,0.02)_1px,transparent_1px)] bg-[size:40px_40px] animate-[gridMove_40s_linear_infinite]" />
+        
+        {/* Architectural corner crosshair details to keep the precise tech feel */}
+        <div className="absolute top-24 left-12 w-6 h-6 border-l border-t border-gray-200/80" />
+        <div className="absolute top-24 right-12 w-6 h-6 border-r border-t border-gray-200/80" />
+        <div className="absolute bottom-12 left-12 w-6 h-6 border-l border-b border-gray-200/80" />
+        <div className="absolute bottom-12 right-12 w-6 h-6 border-r border-b border-gray-200/80" />
+      </div>
+ 
+      {/* ================= CONTENT STRUCTURE MATCHING image_cd2767.png ================= */}
       <div className="relative z-10 max-w-4xl mx-auto px-6 text-center">
-        {/* whoami */}
-        <p className="font-mono mb-4 text-lg text-green-400">
+        
+        {/* whoami typing prompt - styled as clean tech-accent */}
+        {/* <p className="font-mono mb-4 text-sm md:text-base text-[#3f51b5] font-semibold tracking-tight bg-indigo-50/60 inline-block px-3 py-1 rounded-md border border-indigo-100/50 shadow-sm">
           {whoamiText}
-          <span className="animate-pulse">▍</span>
-        </p>
+          <span className="animate-pulse bg-[#3f51b5] inline-block w-1.5 h-3.5 ml-0.5 align-middle"></span>
+        </p> */}
 
-        {/* Name */}
-        <h1 className="text-5xl md:text-6xl font-bold">
-          Hi, I'm <span className="text-green-400">Aman</span>
+        {/* Main Header Name */}
+        <h1 className="text-3xl md:text-5xl font-black tracking-tight text-gray-950">
+          Hi, I'm <span className="text-transparent bg-clip-text bg-gradient-to-r from-gray-950 via-[#3f51b5] to-indigo-500">Aman</span>
         </h1>
 
-        {/* Role typing */}
-        <h2 className="mt-4 text-xl md:text-2xl text-gray-300 font-mono h-8">
-          {roleText}
-          <span className="text-green-400 animate-pulse">|
-            
-          </span>
+        {/* Dynamic cycling role text */}
+        <h2 className="mt-5 text-xl md:text-3xl text-gray-700 font-mono h-10 tracking-wide flex items-center justify-center gap-1">
+          <span className="font-medium">{roleText}</span>
+          <span className="text-[#3f51b5] animate-pulse font-extrabold">|</span>
         </h2>
 
-        {/* Description */}
-        <p className="mt-6 text-gray-400">
+        {/* Secondary description text */}
+        <p className="mt-6 text-gray-600 max-w-2xl mx-auto text-base leading-relaxed tracking-wide font-normal">
           Cyber Security professional focused on offensive and defensive
-          security. Hands-on with labs,CTFs, and real-world tooling.
+          security. Hands-on with labs, CTFs, and real-world tooling.
         </p>
 
-        {/* Buttons */}
-        <div className="mt-8 flex justify-center gap-4">
+        {/* Action Button layout - Polished for Light Mode */}
+        <div className="mt-10 flex flex-col sm:flex-row justify-center items-center gap-4">
           <a
             href="/resume.pdf"
-            className="bg-green-500 hover:bg-green-600 text-black px-6 py-3 rounded font-semibold shadow-lg shadow-green-500/30"
+            className="w-full sm:w-auto bg-[#3f51b5] hover:bg-indigo-700 text-white px-8 py-3.5 rounded-xl font-semibold tracking-wide shadow-lg shadow-indigo-600/15 transition-all duration-300 transform hover:-translate-y-0.5"
           >
             Download Resume
           </a>
           <a
-            href="#contact"
-            className="border border-green-500 text-green-400 px-6 py-3 rounded hover:bg-white/10"
+            href="#hire"
+            className="w-full sm:w-auto bg-white border border-gray-200 text-gray-800 px-8 py-3.5 rounded-xl font-semibold tracking-wide hover:bg-gray-50 hover:border-gray-400 transition-all duration-300 shadow-sm"
           >
-            Contact Me
+            Why Hire me
           </a>
         </div>
 
-        {/* Terminal footer */}
-        <p className="mt-10 text-sm font-mono text-green-400">
-          root@aman:~# access granted
-        </p>
+        {/* Process baseline notification */}
+        {/* <p className="mt-14 text-[11px] font-mono text-gray-400 tracking-[0.25em] uppercase">
+          root@aman:~# access_granted
+        </p> */}
       </div>
 
       {/* ================= ANIMATIONS ================= */}
@@ -123,7 +120,7 @@ function Hero() {
         {`
           @keyframes gridMove {
             from { background-position: 0 0; }
-            to { background-position: 200px 200px; }
+            to { background-position: 160px 160px; }
           }
         `}
       </style>

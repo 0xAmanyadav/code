@@ -9,7 +9,7 @@ import About from "./sections/About";
 import Skills from "./sections/Skills";
 import Projects from "./sections/Projects";
 import Tools from "./sections/Tools";
-import Contact from "./sections/Contact";
+
 import Ranks from "./sections/Ranks";
 import Certifications from "./sections/Certifications";
 
@@ -64,9 +64,9 @@ function App() {
           <Certifications />
         </section>
       </section>
-      <section id="contact">
+      {/* <section id="contact">
         <Contact />
-      </section>
+      </section> */}
 
       <Footer />
     </>

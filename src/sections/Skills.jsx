@@ -1,171 +1,178 @@
-import { motion } from "framer-motion";
-import { useEffect, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { useState, useRef, useEffect } from "react";
+import { Lock, FileWarning, Search, Bot, Database, Zap, Binary, Bug, CloudCheck, Network } from "lucide-react";
 
-/* ================================
-   🧠 EDIT ONLY THESE ARRAYS
-================================ */
-
-// 🔴 RED TEAM SKILLS
 const redTeamSkills = [
-  "Web Application Exploitation",
-  "SQL Injection & XSS",
-  "Privilege Escalation",
-  "Network Penetration Testing",
-  "Burp Suite & Nmap",
+  { name: "Web Application Exploitation", icon: Bug, desc: "Advanced logic & structure injection." },
+  { name: "SQL Injection & XSS", icon: Database, desc: "Bypassing WAFs & data extraction." },
+  { name: "Network Penetration Testing", icon: Zap, desc: "Full-stack active scanning & analysis." },
+  { name: "Cloud & Container Exploitation", icon: CloudCheck, desc: "Container escape & misconfig discovery." },
+  { name: "OSINT & Social Engineering", icon: Search, desc: "Open-source recon & human element." },
 ];
 
-// 🔵 BLUE TEAM SKILLS
 const blueTeamSkills = [
-  "SOC Analysis",
-  "Incident Response",
-  "Threat Hunting",
-  "SIEM & Log Analysis",
-  "Network Defense",
+  { name: "SOC Analysis & Security Ops", icon: Bot, desc: "Real-time threat monitoring & triage." },
+  { name: "SIEM & Log Correlation", icon: FileWarning, desc: "Splunk/Elastic pipeline management." },
+  { name: "Honeypots & Active Defense", icon: Lock, desc: "Hacker misdirection & pattern capture." },
+  { name: "Binary Analysis & Reverse Eng", icon: Binary, desc: "Malware behavior inspection." },
+  { name: "Incident Response", icon: Network, desc: "Rapid breach isolation & post-mortem." },
 ];
 
-/* ================================
-   ⌨️ TERMINAL TYPING COMPONENT
-================================ */
-function TypingSkill({ text }) {
-  const [out, setOut] = useState("");
+/* =========================================================================
+   ⌨️ INFINITE TYPING & DELETING LOOP H2 COMPONENT (Hero Style)
+   ========================================================================= */
+function InfiniteTypingHeader({ text }) {
+  const [headerText, setHeaderText] = useState("");
+  const [charIndex, setCharIndex] = useState(0);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
-    let i = 0;
-    setOut("");
-    const id = setInterval(() => {
-      setOut(text.slice(0, i + 1));
-      i++;
-      if (i === text.length) clearInterval(id);
-    }, 40);
+    const speed = isDeleting ? 40 : 100;
 
-    return () => clearInterval(id);
-  }, [text]);
+    const timeout = setTimeout(() => {
+      setHeaderText(
+        isDeleting 
+          ? text.slice(0, charIndex - 1) 
+          : text.slice(0, charIndex + 1)
+      );
+      setCharIndex(isDeleting ? charIndex - 1 : charIndex + 1);
+
+      // Once finished typing, pause then start deleting
+      if (!isDeleting && charIndex === text.length) {
+        setTimeout(() => setIsDeleting(true), 2000);
+      }
+      // Once finished deleting, pause then restart typing
+      if (isDeleting && charIndex === 0) {
+        setIsDeleting(false);
+      }
+    }, speed);
+
+    return () => clearTimeout(timeout);
+  }, [charIndex, isDeleting, text]);
 
   return (
-    <span className="font-mono text-sm tracking-wide">
-      {out}
-      <span className="animate-pulse text-green-400">▍</span>
-    </span>
+    <h2 className="text-4xl md:text-5xl font-black tracking-tight text-gray-950 inline-block min-h-[60px]">
+      {headerText}
+      <span className="text-[#3f51b5] animate-pulse ml-1 font-extrabold">|</span>
+    </h2>
   );
 }
 
+/* =========================================================================
+   🛡️ LIGHT-THEME 3D EXPERTISE CARD COMPONENT
+   ========================================================================= */
+function SkillCard3D({ skill, mode }) {
+  const Icon = skill.icon;
+  const cardRef = useRef(null);
+  const [rotateX, setRotateX] = useState(0);
+  const [rotateY, setRotateY] = useState(0);
+
+  const handleMouseMove = (event) => {
+    const rect = cardRef.current.getBoundingClientRect();
+    setRotateX((event.clientY - rect.top - rect.height / 2) / 12); 
+    setRotateY((event.clientX - rect.left - rect.width / 2) / 14);
+  };
+
+  const config = mode === "red" ? {
+    border: "border-red-100 group-hover:border-red-400",
+    iconBg: "bg-red-50/60 text-red-600", line: "bg-red-500", shadow: "group-hover:shadow-red-500/10",
+  } : {
+    border: "border-indigo-100 group-hover:border-[ #3f51b5]",
+    iconBg: "bg-indigo-50/60 text-[#3f51b5]", line: "bg-[#3f51b5]", shadow: "group-hover:shadow-indigo-500/10",
+  };
+
+  return (
+    <div
+      ref={cardRef}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={() => { setRotateX(0); setRotateY(0); }}
+      style={{ transform: `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`, transition: "transform 0.1s ease-out" }}
+      className={`relative group rounded-2xl border ${config.border} bg-white px-8 py-7 overflow-hidden transition-all duration-300 hover:shadow-xl ${config.shadow}`}
+    >
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(0,0,0,0.005)_1px,transparent_1px),linear-gradient(to_bottom,rgba(0,0,0,0.005)_1px,transparent_1px)] bg-[size:16px_16px]" />
+      <div className="relative z-10 flex items-start gap-6">
+        <div className={`p-4 ${config.iconBg} rounded-xl group-hover:scale-110 transition duration-300 shadow-sm`}>
+          <Icon className="w-7 h-7" />
+        </div>
+        <div className="flex-1">
+          <h4 className="font-bold text-lg text-gray-950">{skill.name}</h4>
+          <p className="mt-1 text-sm text-gray-500 font-mono tracking-tight leading-relaxed">{skill.desc}</p>
+        </div>
+      </div>
+      <div className={`absolute bottom-0 left-0 h-[3px] ${config.line} transition-all duration-500 w-0 group-hover:w-full`} />
+    </div>
+  );
+}
+
+/* =========================================================================
+   🌐 MAIN SKILLS SECTION COMPONENT
+   ========================================================================= */
 export default function Skills() {
-  const [mode, setMode] = useState("blue"); // blue | red
-
+  const [mode, setMode] = useState("blue");
   const skills = mode === "red" ? redTeamSkills : blueTeamSkills;
-  const glowColor =
-    mode === "red"
-      ? "from-red-500/30 via-red-400/20 to-red-500/30"
-      : "from-green-500/30 via-emerald-400/20 to-green-500/30";
-
-  const borderColor =
-    mode === "red" ? "border-red-500/30" : "border-green-500/30";
-
-  const textColor = mode === "red" ? "text-red-400" : "text-green-400";
 
   return (
     <section
-  id="skills"
-  className={`relative py-28 text-white overflow-hidden ${
-    mode === "red"
-      ? "bg-gradient-to-b from-[#050000] via-red-950/40 to-[#050000]"
-      : "bg-gradient-to-b from-[#050000] via-green-950/40 to-[#050000]"
-  }`}
->
+      id="skills"
+      className="relative min-h-screen py-28 bg-[#fafafa] text-gray-900 overflow-hidden font-sans border-b border-gray-100"
+    >
+      {/* Background Matrix Mesh Grid */}
+      <div className="absolute inset-0 z-0 opacity-[0.4] pointer-events-none">
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(63,81,181,0.015)_1px,transparent_1px),linear-gradient(to_bottom,rgba(63,81,181,0.015)_1px,transparent_1px)] bg-[size:40px_40px]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(250,250,250,0)_0%,#fafafa_80%)]" />
+      </div>
 
-      {/* cyber grid */}
-     {/* <div
-  className={`absolute inset-0 opacity-[0.05] ${
-    mode === "red"
-      ? "bg-[linear-gradient(to_right,#ef4444_1px,transparent_1px),linear-gradient(to_bottom,#ef4444_1px,transparent_1px)]"
-      : "bg-[linear-gradient(to_right,#38bdf8_1px,transparent_1px),linear-gradient(to_bottom,#38bdf8_1px,transparent_1px)]"
-  } bg-[size:80px_80px]`}
-/> */}
-<div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.03),transparent_70%)]" />
-
-
-
-      <div className="relative z-10 max-w-6xl mx-auto px-6">
-        {/* TITLE */}
-        <div className="text-center mb-10">
-          <h2
-  className={`text-3xl md:text-4xl font-bold drop-shadow-[0_0_16px] ${
-    mode === "red"
-      ? "text-red-400 drop-shadow-[0_0_16px_rgba(239,68,68,0.8)]"
-      : "text-green-400 drop-shadow-[0_0_16px_rgba(34,197,94,0.8)]"
-  }`}
->
-
-            Skills
-          </h2>
-          <p className="mt-3 text-gray-400">
-            Offensive & Defensive cybersecurity expertise
+      <div className="relative z-10 max-w-7xl mx-auto px-6">
+        
+        {/* ================= HEADLINE HEADER WITH HERO LOOP TYPING ================= */}
+        <div className="text-center mb-16">
+          <InfiniteTypingHeader text="Skills & Expertise" />
+          
+          <p className="mt-4 text-base md:text-lg text-gray-600 max-w-2xl mx-auto">
+            Deep technical capability mapping across both <span className="text-red-500 font-semibold">Offensive Engineering</span> and <span className="text-[#3f51b5] font-semibold">Defensive Cyber Operations</span>.
           </p>
         </div>
 
-        {/* 🔄 TOGGLE */}
-        <div className="flex justify-center mb-14 gap-4 font-mono text-sm">
-          <button
-            onClick={() => setMode("blue")}
-            className={`px-6 py-2 rounded-md border transition ${
-              mode === "blue"
-                ? "bg-green-500 text-black"
-                : "border-green-500/40 text-green-400 hover:bg-green-500/10"
-            }`}
-          >
-            🔵 Blue Team
-          </button>
-
-          <button
-            onClick={() => setMode("red")}
-            className={`px-6 py-2 rounded-md border transition ${
-              mode === "red"
-                ? "bg-red-500 text-black"
-                : "border-red-500/40 text-red-400 hover:bg-red-500/10"
-            }`}
-          >
-            🔴 Red Team
-          </button>
-        </div>
-
-        {/* SKILLS GRID */}
-        <div className="grid sm:grid-cols-2 gap-8">
-          {skills.map((skill, i) => (
-            <motion.div
-              key={i}
-              initial={{ opacity: 0, y: 25 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: false }}
-              transition={{ delay: i * 0.1 }}
-              whileHover={{ y: -6 }}
-              className={`relative group rounded-xl border ${borderColor} bg-black px-8 py-6 overflow-hidden`}
+        {/* ================= TOGGLE INTERFACE SWITCHES ================= */}
+        <div className="flex justify-center mb-16">
+          <div className="relative bg-white rounded-xl p-1.5 border border-gray-200/80 flex items-center gap-2 shadow-sm z-10">
+            <button
+              onClick={() => setMode("blue")}
+              className={`px-8 py-2.5 rounded-lg font-mono text-xs md:text-sm font-bold transition-all ${
+                mode === "blue" ? "bg-[#3f51b5] text-white shadow-md shadow-indigo-600/10" : "text-gray-500 hover:text-gray-900"
+              }`}
             >
-              {/* glow */}
-              <div
-                className={`absolute inset-0 opacity-0 group-hover:opacity-100 transition duration-500 bg-gradient-to-r ${glowColor} blur-xl`}
-              />
-
-              {/* content */}
-              <div className="relative z-10 flex items-center gap-4">
-                <span className={`font-mono ${textColor}`}>▸</span>
-
-                <TypingSkill text={skill} />
-              </div>
-
-              {/* bottom neon */}
-              <div
-                className={`absolute bottom-0 left-0 h-[2px] w-0 ${
-                  mode === "red" ? "bg-red-400" : "bg-green-400"
-                } group-hover:w-full transition-all duration-500`}
-              />
-            </motion.div>
-          ))}
+              🛡️ Blue Team Operations
+            </button>
+            <button
+              onClick={() => setMode("red")}
+              className={`px-8 py-2.5 rounded-lg font-mono text-xs md:text-sm font-bold transition-all ${
+                mode === "red" ? "bg-red-600 text-white shadow-md shadow-red-600/10" : "text-gray-500 hover:text-red-600"
+              }`}
+            >
+              💥 Red Team Penetration
+            </button>
+          </div>
         </div>
 
-        {/* TERMINAL FOOTER */}
-        <p className="mt-16 text-center font-mono text-green-400 text-sm">
-          root@aman:~$ loading {mode}-team skills...
-        </p>
+        {/* ================= STAGGERED REVEAL SKILLS GRID ================= */}
+        <div className="grid md:grid-cols-2 gap-5 max-w-4xl mx-auto">
+          <AnimatePresence mode="wait">
+            {skills.map((skill) => (
+              <motion.div
+                key={skill.name + mode} // Smooth animation switch on grid toggle
+                initial={{ opacity: 0, y: 15 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.98, transition: { duration: 0.15 } }}
+                transition={{ duration: 0.3 }}
+                className="w-full"
+              >
+                <SkillCard3D skill={skill} mode={mode} />
+              </motion.div>
+            ))}
+          </AnimatePresence>
+        </div>
+
       </div>
     </section>
   );

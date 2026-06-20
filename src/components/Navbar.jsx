@@ -13,14 +13,14 @@ import {
 } from "lucide-react";
 
 const sections = [
-  { id: "home", label: "Home", icon: Home },
+  { id: "home", label: "Overview", icon: Home },
   { id: "about", label: "About", icon: User },
-  { id: "skills", label: "Skills", icon: Shield },
-  { id: "tools", label: "Tools", icon: Wrench },
-  { id: "ranks", label: "Ranks", icon: SquareStar },
+  { id: "skills", label: "Threat Intel", icon: Shield },
+  { id: "tools", label: "Toolbox", icon: Wrench },
+  { id: "ranks", label: "Labs Solved", icon: SquareStar },
   { id: "projects", label: "Projects", icon: Folder },
-  { id: "write-up", label: "writeup", icon: NotebookPen },
-  { id: "contact", label: "Contact", icon: Mail },
+  { id: "write-up", label: "Writeups", icon: NotebookPen },
+  { id: "contact", label: "Engage", icon: Mail },
 ];
 
 function Navbar() {
@@ -46,23 +46,25 @@ function Navbar() {
   }, []);
 
   return (
-    <nav className="fixed top-0 w-full bg-black border-b border-gray-800 z-50">
-      <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-        {/* LOGO */}
-        <a href="#home" className="text-green-400 font-mono">
-          root@aman
+    // 🛠️ FIX: Clean base color background with a heavier backdrop-blur to prevent content merging on scroll
+   <nav className="fixed top-0 w-full z-50 bg-[#edf0f5]/95 backdrop-blur-md border-b border-gray-200/50 shadow-sm transition-all duration-300">
+      <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+        
+        {/* LOGO - 🛠️ FIX: Removed clashing text classes. "yadav" is now styled with a clean brand indigo color */}
+        <a href="#home" className="text-2xl font-black tracking-tight text-gray-950 font-sans select-none">
+          Aman <span className="text-2xl font-black tracking-tight text-[#3f51b5]">yadav</span>
         </a>
 
-        {/* DESKTOP */}
-        <div className="hidden md:flex space-x-6">
+        {/* DESKTOP MENU - Dark-slate floating capsule design */}
+        <div className="hidden lg:flex items-center bg-[#2d3139] px-4 py-1.5 rounded-full shadow-md border border-gray-700/50">
           {sections.map(({ id, label }) => (
             <a
               key={id}
               href={`#${id}`}
-              className={`px-3 py-2 transition ${
+              className={`px-4 py-2 text-sm font-medium tracking-wide rounded-full transition-all duration-200 ${
                 active === id
-                  ? "text-green-400 border-b border-green-400"
-                  : "text-gray-300 hover:text-green-400"
+                  ? "bg-white/10 text-white shadow-sm"
+                  : "text-gray-400 hover:text-white"
               }`}
             >
               {label}
@@ -73,27 +75,27 @@ function Navbar() {
         {/* MOBILE ICON */}
         <button
           onClick={() => setOpen(!open)}
-          className="md:hidden text-green-400"
+          className="lg:hidden text-gray-900 p-2 hover:bg-gray-100 rounded-xl transition animate-none"
         >
-          {open ? <X size={26} /> : <Menu size={26} />}
+          {open ? <X size={24} /> : <Menu size={24} />}
         </button>
       </div>
 
       {/* MOBILE MENU */}
       {open && (
-        <div className="md:hidden bg-black border-t border-gray-800 px-6 py-6 space-y-4">
+        <div className="lg:hidden absolute top-20 left-0 w-full bg-white border-b border-gray-100 shadow-xl px-6 py-6 flex flex-col gap-2">
           {sections.map(({ id, label, icon: Icon }) => (
             <a
               key={id}
               href={`#${id}`}
               onClick={() => setOpen(false)}
-              className={`flex items-center gap-3 transition ${
+              className={`flex items-center gap-4 px-4 py-3 rounded-xl font-medium transition ${
                 active === id
-                  ? "text-green-400"
-                  : "text-gray-300 hover:text-green-400"
+                  ? "bg-indigo-50 text-[#3f51b5]"
+                  : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
               }`}
             >
-              <Icon size={18} />
+              <Icon size={20} className={active === id ? "text-[#3f51b5]" : "text-gray-400"} />
               {label}
             </a>
           ))}

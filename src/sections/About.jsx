@@ -1,78 +1,97 @@
 import { motion } from "framer-motion";
 
-function About() {
+export default function BasicAbout() {
+  const stats = [
+    { title: "15+", subtitle: "Certifications", details: "Accredited (ISC)², Cisco, Comptia", icon: "🛡️" },
+    { title: "75+", subtitle: "Labs Solved", details: "Complex Vulnerability Chains (CTF, THM)", icon: "📡" },
+    { title: "Top 100", subtitle: "Active Player", details: "Global active metrics", icon: "🏆" },
+  ];
+
   return (
     <section
       id="about"
-      className="relative py-32 bg-black text-white"
+      className="relative py-24 bg-[#fafafa] text-gray-900 overflow-hidden font-sans border-b border-gray-100"
     >
-      <div className="max-w-6xl mx-auto px-6 grid md:grid-cols-2 gap-14 items-center">
+      <div className="max-w-6xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
         
-        {/* IMAGE */}
+        {/* ================= LEFT SIDE: PHOTO POP (NO BLUR) ================= */}
         <motion.div
-          initial={{ opacity: 0, x: -100 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
-          viewport={{ once: false, amount: 0.4 }}
-          className="relative flex justify-center"
+          initial={{ opacity: 0, y: 60, scale: 0.9 }}
+          whileInView={{ opacity: 1, y: 0, scale: 1 }}
+          transition={{ duration: 0.6, ease: "easeOut" }}
+          viewport={{ once: true, amount: 0.3 }} // Triggers early on scroll
+          className="flex justify-center items-center"
         >
-          {/* Glow */}
-          <div className="absolute -inset-4 bg-green-500/20 rounded-3xl blur-2xl"></div>
-
-          <img
-            src="/public/Tools_logo/a.png"
-            alt="Aman Cyber Security"
-            className="relative w-72 md:w-80 rounded-2xl border border-green-500/30 shadow-xl"
-          />
+          <div className="relative p-2 bg-white rounded-full shadow-lg border border-gray-100">
+            <img
+              src="/public/Tools_logo/a.png"
+              alt="Aman Portfolio Portrait"
+              className="w-64 h-64 md:w-80 md:h-80 object-cover rounded-full border-4 border-white grayscale"
+            />
+          </div>
         </motion.div>
 
-        {/* CONTENT */}
+        {/* ================= RIGHT SIDE: DETAILS SHOW (NO BLUR) ================= */}
         <motion.div
-          initial={{ opacity: 0, x: 100 }}
+          initial={{ opacity: 0, x: 50 }}
           whileInView={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
-          viewport={{ once: false, amount: 0.4 }}
+          transition={{ duration: 0.6, ease: "easeOut", delay: 0.1 }}
+          viewport={{ once: true, amount: 0.3 }}
+          className="flex flex-col justify-center"
         >
-          <span className="inline-block mb-4 px-4 py-1 text-sm rounded-full bg-green-500/10 text-green-400 border border-green-500/30">
-            About Me
+          <span className="font-mono text-xs font-bold tracking-[0.25em] text-[#3f51b5] uppercase mb-3 block">
+            SEC_DOSSIER // IDENTITY_VERIFIED
           </span>
 
-          <h2 className="text-3xl md:text-4xl font-bold">
-            Cyber Security Enthusiast <br />
-            <span className="text-green-400">& Defensive Hacker</span>
+          <h2 className="text-4xl font-black tracking-tight text-gray-950 leading-tight">
+            ABOUT AMAN, <br />
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#3f51b5] to-indigo-500">
+              LEADER AT AMAN CYBER LAB
+            </span>
           </h2>
 
-          <p className="mt-6 text-gray-400 leading-relaxed">
-            I am a passionate cyber security learner focused on real-world
-            security challenges. I actively practice on platforms like
-            TryHackMe and Hack The Box, working on penetration testing and wep penetration,
-            SOC analysis, and blue team defense techniques.
+          <p className="mt-4 text-gray-600 text-base leading-relaxed font-normal">
+            I am a passionate cybersecurity professional with a defensive mindset. Specializing in threat intelligence, vulnerability assessment, and securing modern digital assets, my goal is to protect modern systems and resilient organizations in our digital world.
           </p>
 
-          <p className="mt-4 text-gray-400 leading-relaxed">
-            My goal is to secure modern systems, identify vulnerabilities,
-            and help organizations protect their digital assets.
-          </p>
+          {/* METRIC CARDS */}
+          <div className="mt-8 grid grid-cols-1 sm:grid-cols-3 gap-4 w-full">
+            {stats.map((stat, index) => (
+              <div
+                key={index}
+                className="bg-white p-4 rounded-xl border border-gray-100 shadow-sm flex flex-col gap-1 hover:-translate-y-1 transition-all duration-300"
+              >
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-semibold text-gray-400 tracking-wider uppercase">
+                    {stat.subtitle}
+                  </span>
+                  <span className="text-base">{stat.icon}</span>
+                </div>
+                <h3 className="text-xl font-black text-gray-950 mt-1">
+                  {stat.title}
+                </h3>
+                <p className="text-[11px] text-gray-500 leading-tight mt-0.5">
+                  {stat.details}
+                </p>
+              </div>
+            ))}
+          </div>
 
-          {/* STATS */}
-          <div className="mt-10 grid grid-cols-3 gap-6">
+          {/* ACTIVE STATUS PANEL */}
+          <div className="mt-6 p-4 bg-indigo-50/40 rounded-xl border border-indigo-100/50 flex items-start gap-3">
+            <span className="text-xl mt-0.5">🌐</span>
             <div>
-              <h3 className="text-2xl font-bold text-green-400">10+</h3>
-              <p className="text-sm text-gray-500">Certifications</p>
-            </div>
-            <div>
-              <h3 className="text-2xl font-bold text-green-400">65+</h3>
-              <p className="text-sm text-gray-500">Labs Solved</p>
-            </div>
-            <div>
-              <h3 className="text-2xl font-bold text-green-400">CTF</h3>
-              <p className="text-sm text-gray-500">Active Player</p>
+              <h4 className="text-xs font-bold text-gray-950 uppercase tracking-wider font-mono">
+                Active Threat Intelligence Monitoring
+              </h4>
+              <p className="mt-0.5 text-xs text-gray-600 leading-relaxed">
+                Engaged in real-time monitoring of emerging threat vectors and vulnerabilities across modern platforms (HackTheBox, TryHackMe).
+              </p>
             </div>
           </div>
         </motion.div>
+
       </div>
     </section>
   );
 }
-
-export default About;
