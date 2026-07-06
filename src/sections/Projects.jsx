@@ -38,7 +38,7 @@ const projects = [
   },
 ];
 
-/* ================= EXACT SAME DYNAMIC TYPING LOGIC ================= */
+/* ================= DYNAMIC TYPING TITLE ================= */
 function TypingTitle({ text }) {
   const [out, setOut] = useState("");
   const [start, setStart] = useState(false);
@@ -52,18 +52,18 @@ function TypingTitle({ text }) {
       setOut(text.slice(0, i + 1));
       i++;
       if (i === text.length) clearInterval(id);
-    }, 70);
+    }, 60);
 
     return () => clearInterval(id);
   }, [start, text]);
 
   return (
     <motion.h2
-      className="text-3xl md:text-4xl font-black text-gray-950 font-mono text-center tracking-tight"
+      className="text-3xl md:text-4xl font-extrabold text-gray-900 font-mono text-center tracking-tight"
       initial={{ opacity: 0 }}
       whileInView={{ opacity: 1 }}
-      viewport={{ once: false }}
-      onViewportEnter={() => setStart((p) => !p)}
+      viewport={{ once: true }}
+      onViewportEnter={() => setStart(true)}
     >
       {out}
       <span className="text-[#3f51b5] animate-pulse ml-0.5">▍</span>
@@ -71,57 +71,105 @@ function TypingTitle({ text }) {
   );
 }
 
-/* ================= PREMIUM BENTO-STYLE PROJECT CARD (1.08x ZOOM) ================= */
+
+
+/* =========================================================================
+   ⌨️ INFINITE TYPING & DELETING LOOP H2 COMPONENT (Hero Style)
+   ========================================================================= */
+function InfiniteTypingHeader({ text }) {
+  const [headerText, setHeaderText] = useState("");
+  const [charIndex, setCharIndex] = useState(0);
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  useEffect(() => {
+    const speed = isDeleting ? 40 : 100;
+
+    const timeout = setTimeout(() => {
+      setHeaderText(
+        isDeleting 
+          ? text.slice(0, charIndex - 1) 
+          : text.slice(0, charIndex + 1)
+      );
+      setCharIndex(isDeleting ? charIndex - 1 : charIndex + 1);
+
+      // Once finished typing, pause then start deleting
+      if (!isDeleting && charIndex === text.length) {
+        setTimeout(() => setIsDeleting(true), 2000);
+      }
+      // Once finished deleting, pause then restart typing
+      if (isDeleting && charIndex === 0) {
+        setIsDeleting(false);
+      }
+    }, speed);
+
+    return () => clearTimeout(timeout);
+  }, [charIndex, isDeleting, text]);
+
+  return (
+    <h2 className="text-4xl md:text-4xl font-black tracking-tight text-gray-950 inline-block min-h-[60px]">
+      {headerText}
+      <span className="text-[#3f51b5] animate-pulse ml-1 font-extrabold">|</span>
+    </h2>
+  );
+}
+
+
+
+
+/* ================= ENHANCED DYNAMIC PROJECT CARD ================= */
 function ProjectCard({ p, setOpenPdf }) {
   const isCompleted = p.status === "completed";
   
   return (
     <motion.div
       whileHover={{ 
-        scale: 1.08, // 🛠️ ENHANCED TO EXACT 1.08x ARSENAL STANDARD
+        scale: 1.02, 
         y: -6,
-        transition: { duration: 0.25, ease: "easeInOut" }
+        transition: { duration: 0.2, ease: "easeOut" }
       }}
-      className="relative w-full bg-white border border-gray-100 rounded-3xl p-7 flex flex-col justify-between h-full shadow-[0_8px_30px_rgb(0,0,0,0.015)] hover:shadow-[0_20px_50px_rgba(63,81,181,0.06)] transition-all duration-300 group overflow-hidden"
+      className={`relative w-full border-2 rounded-2xl p-6 flex flex-col justify-between h-full transition-all duration-300 group overflow-hidden bg-white shadow-md hover:shadow-2xl ${
+        isCompleted 
+          ? "border-emerald-500/20 hover:border-emerald-500" 
+          : "border-indigo-500/20 hover:border-[#3f51b5]"
+      }`}
     >
-      {/* Structural Accent Top-Left Line Highlighting */}
-      <div className="absolute top-0 left-0 w-1.5 h-0 bg-[#3f51b5] group-hover:h-full transition-all duration-300 rounded-r-md" />
+      {/* Side Decorative Accent Line inside Card */}
+      <div className={`absolute top-0 left-0 w-1.5 h-0 transition-all duration-300 group-hover:h-full ${isCompleted ? 'bg-emerald-500' : 'bg-[#3f51b5]'}`} />
 
       <div>
-        {/* Category Label & Status Matrix Row */}
-        <div className="flex items-center justify-between mb-5">
-          <span className="text-[10px] font-mono font-bold tracking-wider text-gray-400 bg-gray-50 px-3 py-1 rounded-full border border-gray-100 flex items-center gap-1.5 uppercase">
-            <Layers className="w-3 h-3 text-indigo-400" /> {p.category}
+        {/* Badges Matrix */}
+        <div className="flex items-center justify-between mb-4">
+          <span className="text-[10px] font-mono font-medium tracking-wider text-gray-400 bg-gray-50 px-2.5 py-1 rounded-md border border-gray-200 flex items-center gap-1 uppercase">
+            <Layers className="w-3 h-3 text-gray-400" /> {p.category}
           </span>
           
-          {/* Status Badge */}
           {isCompleted ? (
-            <span className="text-[10px] font-mono font-bold tracking-wide px-3 py-1 rounded-full bg-emerald-50 text-emerald-600 border border-emerald-100 flex items-center gap-1">
+            <span className="text-[10px] font-mono font-bold px-2.5 py-0.5 rounded-md bg-emerald-50 text-emerald-700 border border-emerald-200 flex items-center gap-1 shadow-xs">
               <ShieldCheck className="w-3 h-3" /> SECURE
             </span>
           ) : (
-            <span className="text-[10px] font-mono font-bold tracking-wide px-3 py-1 rounded-full bg-amber-50 text-amber-600 border border-amber-100 flex items-center gap-1">
+            <span className="text-[10px] font-mono font-bold px-2.5 py-0.5 rounded-md bg-indigo-50 text-[#3f51b5] border border-indigo-200 flex items-center gap-1 shadow-xs">
               <Activity className="w-3 h-3 animate-spin" /> COMPILING
             </span>
           )}
         </div>
 
         {/* Title */}
-        <h3 className="text-xl font-extrabold text-gray-950 tracking-tight transition-colors duration-200 group-hover:text-[#3f51b5]">
+        <h3 className={`text-lg font-extrabold text-gray-900 tracking-tight transition-colors duration-200 ${isCompleted ? 'group-hover:text-emerald-600' : 'group-hover:text-[#3f51b5]'}`}>
           {p.title}
         </h3>
 
         {/* Description */}
-        <p className="text-sm text-gray-500 leading-relaxed font-normal mt-3 mb-6">
+        <p className="text-xs text-gray-600 leading-relaxed font-normal mt-2.5 mb-5">
           {p.desc}
         </p>
 
-        {/* Technical Stack Pills */}
-        <div className="flex flex-wrap gap-1.5 mb-6">
+        {/* Tech Stack */}
+        <div className="flex flex-wrap gap-1.5 mb-4">
           {p.tech.map((techItem, i) => (
             <span
               key={i}
-              className="text-[11px] font-mono font-semibold px-3 py-1 bg-gray-50/70 border border-gray-200/50 rounded-xl text-gray-600"
+              className="text-[10px] font-mono px-2 py-0.5 bg-gray-50 border border-gray-200 rounded text-gray-600 font-medium"
             >
               {techItem}
             </span>
@@ -130,52 +178,52 @@ function ProjectCard({ p, setOpenPdf }) {
 
         {/* Progress System Integration */}
         {p.status === "progress" && (
-          <div className="mb-6 bg-gray-50/50 p-4 rounded-2xl border border-gray-100">
-            <div className="flex justify-between text-xs font-mono font-bold text-gray-600 mb-2">
-              <span className="flex items-center gap-1.5 text-amber-600">
-                <Terminal className="w-3.5 h-3.5" /> environment_building...
+          <div className="mb-4 bg-gray-50/80 p-3 rounded-xl border border-indigo-100">
+            <div className="flex justify-between text-[10px] font-mono text-indigo-500 mb-1.5">
+              <span className="flex items-center gap-1 font-semibold">
+                <Terminal className="w-3 h-3" /> build_environment...
               </span>
-              <span className="text-gray-900">{p.progress}%</span>
+              <span className="font-bold text-indigo-700">{p.progress}%</span>
             </div>
-            <div className="w-full h-2 bg-gray-200/60 rounded-full overflow-hidden">
+            <div className="w-full h-1.5 bg-indigo-100 rounded-full overflow-hidden">
               <motion.div
                 initial={{ width: 0 }}
                 whileInView={{ width: `${p.progress}%` }}
                 viewport={{ once: true }}
-                transition={{ duration: 1.5, ease: "easeOut" }}
-                className="h-full bg-amber-500 rounded-full shadow-[0_0_10px_rgba(245,158,11,0.3)]"
+                transition={{ duration: 1.2, ease: "easeOut" }}
+                className="h-full bg-[#3f51b5] rounded-full"
               />
             </div>
           </div>
         )}
       </div>
 
-      {/* Action Buttons Block */}
-      <div className="grid grid-cols-3 gap-2.5 pt-4 border-t border-gray-50 mt-auto">
+      {/* Action Links */}
+      <div className="grid grid-cols-3 gap-2 pt-3 border-t border-gray-100 mt-auto">
         <a 
           href={p.demo}
-          className="text-xs font-mono font-bold border border-gray-100 rounded-xl py-3 flex items-center justify-center gap-1.5 text-gray-600 bg-gray-50/30 hover:bg-[#3f51b5] hover:text-white hover:border-[#3f51b5] transition-all duration-200"
+          className={`text-[11px] font-mono font-medium border border-gray-200 rounded-lg py-2 flex items-center justify-center gap-1 text-gray-600 bg-white shadow-xs transition-all duration-150 ${isCompleted ? 'hover:bg-emerald-600 hover:text-white hover:border-emerald-600' : 'hover:bg-[#3f51b5] hover:text-white hover:border-[#3f51b5]'}`}
         >
-          <ExternalLink className="w-3.5 h-3.5" /> Live
+          <ExternalLink className="w-3 h-3" /> Live
         </a>
         <a 
           href={p.github}
-          className="text-xs font-mono font-bold border border-gray-100 rounded-xl py-3 flex items-center justify-center gap-1.5 text-gray-600 bg-gray-50/30 hover:bg-[#3f51b5] hover:text-white hover:border-[#3f51b5] transition-all duration-200"
+          className={`text-[11px] font-mono font-medium border border-gray-200 rounded-lg py-2 flex items-center justify-center gap-1 text-gray-600 bg-white shadow-xs transition-all duration-150 ${isCompleted ? 'hover:bg-emerald-600 hover:text-white hover:border-emerald-600' : 'hover:bg-[#3f51b5] hover:text-white hover:border-[#3f51b5]'}`}
         >
-          <Github className="w-3.5 h-3.5" /> Repo
+          <Github className="w-3 h-3" /> Repo
         </a>
         <button
           onClick={() => setOpenPdf(p.writeup)}
-          className="text-xs font-mono font-bold border border-gray-100 rounded-xl py-3 flex items-center justify-center gap-1.5 text-gray-600 bg-gray-50/30 hover:bg-[#3f51b5] hover:text-white hover:border-[#3f51b5] transition-all duration-200"
+          className={`text-[11px] font-mono font-medium border border-gray-200 rounded-lg py-2 flex items-center justify-center gap-1 text-gray-600 bg-white shadow-xs transition-all duration-150 ${isCompleted ? 'hover:bg-emerald-600 hover:text-white hover:border-emerald-600' : 'hover:bg-[#3f51b5] hover:text-white hover:border-[#3f51b5]'}`}
         >
-          <FileText className="w-3.5 h-3.5" /> Writeup
+          <FileText className="w-3 h-3" /> Writeup
         </button>
       </div>
     </motion.div>
   );
 }
 
-/* ================= MAIN INTERFACE WRAPPER ================= */
+/* ================= MAIN INTERFACE COMPONENT ================= */
 export default function Projects() {
   const [openPdf, setOpenPdf] = useState(null);
 
@@ -183,40 +231,45 @@ export default function Projects() {
   const progress = projects.filter(p => p.status === "progress");
 
   return (
-    <section 
-      id="projects" 
-      className="relative py-32 bg-[#fafafa] text-gray-900 font-sans border-b border-gray-100 overflow-hidden"
-    >
-      {/* Mesh Coordinates Grid Base Overlay */}
-      <div className="absolute inset-0 z-0 opacity-[0.35] pointer-events-none bg-[linear-gradient(to_right,rgba(63,81,181,0.015)_1px,transparent_1px),linear-gradient(to_bottom,rgba(63,81,181,0.015)_1px,transparent_1px)] bg-[size:40px_40px]" />
+    <section id="projects" className="relative py-24 bg-[#fafafa] text-gray-900 overflow-hidden">
+      {/* Soft Tech Background Overlay Grid */}
+      <div className="absolute inset-0 z-0 opacity-[0.2] pointer-events-none bg-[linear-gradient(to_right,rgba(63,81,181,0.02)_1px,transparent_1px),linear-gradient(to_bottom,rgba(63,81,181,0.02)_1px,transparent_1px)] bg-[size:40px_40px]" />
 
       <div className="relative z-10 max-w-6xl mx-auto px-6">
         
-        {/* ================= HEADER SECTION WITH TRIGGER SCRIPT TYPING EFFECT ================= */}
-        <div className="text-center mb-28">
-          <p className="font-mono text-xs font-bold tracking-[0.25em] text-gray-400 uppercase mb-3 block">
-            LAB_BUILD_OUTPUTS // CORE_DEPLOYMENTS
-          </p>
-          <TypingTitle text="Project Matrix Status" />
-          <div className="w-12 h-1 bg-[#3f51b5] mx-auto mt-4 rounded-full" />
-          <p className="mt-5 text-base text-gray-500 max-w-sm mx-auto font-normal">
-            Completed deployments and active defensive frameworks built in lab configurations.
+        {/* ================= MODERN MAIN SECTION HEADER ================= */}
+        <div className="text-center mb-24 flex flex-col items-center justify-center">
+         
+          
+          
+          {/* Dynamic Typing Title Wrapper */}
+          <div className="relative inline-block px-4">
+            <InfiniteTypingHeader text="Project Status" />
+          </div>
+          
+          {/* Sleek Underline Gradient Accent */}
+          <div className="flex items-center gap-1.5 mt-4">
+            <div className="w-8 h-[3px] bg-gradient-to-r from-emerald-500 to-[#3f51b5] rounded-full" />
+            <div className="w-2 h-2 rounded-full bg-[#3f51b5] animate-ping" />
+            <div className="w-8 h-[3px] bg-gradient-to-r from-[#3f51b5] to-emerald-500 rounded-full" />
+          </div>
+
+          {/* Sub-text Descriptor */}
+          <p className="mt-4 text-base md:text-lg text-gray-600 max-w-2xl mx-auto">
+           <span className="text-red-500 font-semibold"> Live deployment, </span> active vulnerability pipelines, and operational <span className="text-blue-500 font-semibold"> Cyber Defense</span> registries.
           </p>
         </div>
 
-        {/* ================= PRODUCTION DEPLOYED SYSTEMS ================= */}
+        {/* ================= SECTION 1: VERIFIED DEPLOYMENTS ================= */}
         <div className="mb-24">
-          <motion.div 
-            initial={{ opacity: 0, x: -10 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            className="flex items-center gap-3 mb-10"
-          >
-            <div className="w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-[0_0_8px_#10b981]" />
-            <h3 className="text-sm font-mono font-bold uppercase tracking-wider text-gray-400">
-              Verified Assemblies [Production]
-            </h3>
-          </motion.div>
+          {/* Capsule Box Header inspired by image_ad96aa.png */}
+          <div className="inline-flex items-center gap-3 mb-8 bg-white border border-emerald-100 rounded-full px-5 py-2.5 shadow-sm relative overflow-hidden pl-7">
+            <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-emerald-500" />
+            <span className="text-gray-500 font-mono text-xs font-bold tracking-wider flex items-center gap-1">
+              &gt;_ ACTIVE <span className="text-emerald-600 font-extrabold">VERIFIED</span> ASSEMBLIES / PRODUCTION
+            </span>
+            <div className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.6)] ml-1" />
+          </div>
           
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {completed.map((p, i) => (
@@ -225,19 +278,16 @@ export default function Projects() {
           </div>
         </div>
 
-        {/* ================= ACTIVE DEVELOPMENT PIPELINES ================= */}
+        {/* ================= SECTION 2: ACTIVE PIPELINES ================= */}
         <div>
-          <motion.div 
-            initial={{ opacity: 0, x: -10 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            className="flex items-center gap-3 mb-10"
-          >
-            <div className="w-2.5 h-2.5 rounded-full bg-amber-500 shadow-[0_0_8px_#f59e0b]" />
-            <h3 className="text-sm font-mono font-bold uppercase tracking-wider text-gray-400">
-              Active Pipelines [Development]
-            </h3>
-          </motion.div>
+          {/* Capsule Box Header inspired by image_ad96aa.png */}
+          <div className="inline-flex items-center gap-3 mb-8 bg-white border border-indigo-100 rounded-full px-5 py-2.5 shadow-sm relative overflow-hidden pl-7">
+            <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-indigo-500" />
+            <span className="text-gray-500 font-mono text-xs font-bold tracking-wider flex items-center gap-1">
+              &gt;_ ACTIVE <span className="text-[#3f51b5] font-extrabold">PIPELINES</span> / IN DEVELOPMENT
+            </span>
+            <div className="w-2.5 h-2.5 rounded-full bg-indigo-500 animate-pulse shadow-[0_0_8px_rgba(63,81,181,0.6)] ml-1" />
+          </div>
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {progress.map((p, i) => (
@@ -248,39 +298,34 @@ export default function Projects() {
 
       </div>
 
-      {/* ================= HIGH-END MODAL VIEWPORTS (PDF SYSTEM WRAPPER) ================= */}
+      {/* PDF Viewport Overlay Modal */}
       <AnimatePresence>
         {openPdf && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-gray-950/30 backdrop-blur-md flex items-center justify-center z-50 p-4 md:p-6"
+            className="fixed inset-0 bg-gray-900/30 backdrop-blur-sm flex items-center justify-center z-50 p-4"
           >
             <motion.div
-              initial={{ scale: 0.97, y: 20 }}
+              initial={{ scale: 0.98, y: 10 }}
               animate={{ scale: 1, y: 0 }}
-              exit={{ scale: 0.97, y: 20 }}
-              className="w-full max-w-5xl h-[88vh] bg-white border border-gray-100 shadow-2xl rounded-3xl overflow-hidden flex flex-col"
+              exit={{ scale: 0.98, y: 10 }}
+              className="w-full max-w-4xl h-[84vh] bg-white border border-gray-200 shadow-2xl rounded-2xl overflow-hidden flex flex-col"
             >
-              <div className="flex justify-between items-center px-6 py-4.5 border-b border-gray-100 bg-gray-50/50">
-                <span className="font-mono font-bold text-gray-900 text-xs tracking-widest uppercase flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-[#3f51b5] animate-ping" /> SECURE_DOCUMENT_VIEWER // WRITEOUP.SYS
+              <div className="flex justify-between items-center px-5 py-3 border-b border-gray-200 bg-gray-50">
+                <span className="font-mono font-bold text-gray-500 text-[10px] tracking-widest uppercase flex items-center gap-1.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 animate-pulse" /> DOCUMENT_VIEWER // {openPdf.split('/').pop()}
                 </span>
                 <button
                   onClick={() => setOpenPdf(null)}
-                  className="text-gray-400 hover:text-gray-900 font-extrabold bg-white border border-gray-200/60 w-8 h-8 flex items-center justify-center rounded-xl transition-all duration-150 shadow-xs hover:border-gray-300"
+                  className="text-gray-400 hover:text-gray-900 text-xs bg-white border border-gray-200 w-6 h-6 flex items-center justify-center rounded-md transition-all"
                 >
                   ✕
                 </button>
               </div>
-              
               <div className="flex-1 bg-gray-50">
-                <iframe 
-                  src={openPdf} 
-                  className="w-full h-full border-none" 
-                  title="Aman's Security Lab Portfolio PDF Viewer" 
-                />
+                <iframe src={openPdf} className="w-full h-full border-none" title="PDF Security Lab Workspace" />
               </div>
             </motion.div>
           </motion.div>

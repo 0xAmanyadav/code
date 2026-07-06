@@ -1,7 +1,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
-import { Award, Calendar, Download, Eye, ShieldAlert, Compass } from "lucide-react";
-
+import { Award, Calendar, Download, Eye, ShieldAlert, Compass, Terminal, Cpu } from "lucide-react";
+import { InfiniteTypingHeader } from "./Ranks";
 const certifications = [
   {
     title: "Certified Ethical Hacker (CEH)",
@@ -35,34 +35,35 @@ const certifications = [
   },
 ];
 
-/* ================= CUSTOM TYPING TITLE (EXACT SAME MECHANISM) ================= */
+/* ================= OPTIMIZED SCROLL-TRIGGERED TYPING TITLE ================= */
 function TypingTitle({ text }) {
-  const [out, setOut] = useState("");
-  const [start, setStart] = useState(false);
+  const chars = Array.from(text);
 
-  useEffect(() => {
-    if (!start) return;
-    setOut("");
-    let i = 0;
+  const containerVariants = {
+    hidden: {},
+    visible: {
+      transition: { staggerChildren: 0.04 }
+    }
+  };
 
-    const id = setInterval(() => {
-      setOut(text.slice(0, i + 1));
-      i++;
-      if (i === text.length) clearInterval(id);
-    }, 70);
-
-    return () => clearInterval(id);
-  }, [start, text]);
+  const letterVariants = {
+    hidden: { opacity: 0, display: "none" },
+    visible: { opacity: 1, display: "inline" }
+  };
 
   return (
     <motion.h2
-      className="text-3xl md:text-4xl font-black text-gray-950 font-mono text-center tracking-tight md:font-extrabold mt-8 uppercase"
-      initial={{ opacity: 0 }}
-      whileInView={{ opacity: 1 }}
-      viewport={{ once: false }}
-      onViewportEnter={() => setStart((p) => !p)}
+      variants={containerVariants}
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: false, amount: 0.4 }}
+      className="text-3xl md:text-4xl font-black text-gray-950 font-mono text-center tracking-tight md:font-extrabold mt-8 uppercase min-h-[40px]"
     >
-      {out}
+      {chars.map((char, index) => (
+        <motion.span key={index} variants={letterVariants}>
+          {char}
+        </motion.span>
+      ))}
       <span className="text-[#3f51b5] animate-pulse ml-0.5">▍</span>
     </motion.h2>
   );
@@ -80,7 +81,7 @@ function CertCard({ cert, index, onOpen }) {
       transition={{ duration: 0.4, delay: index * 0.08 }}
       viewport={{ once: true }}
       whileHover={{ 
-        scale: 1.08, // 🛠️ DYNAMIC HOVER ZOOM EFFECT
+        scale: 1.05, 
         y: -4,
         transition: { duration: 0.2 }
       }}
@@ -158,29 +159,38 @@ export default function Certifications() {
         
         {/* ================= HEADER SECTION WITH ACTIVE TYPING EFFECT ================= */}
         <div className="text-center mb-24 ">
-          <p className="font-mono text-xs font-bold tracking-[0.25em] text-gray-400 uppercase mb-3 block">
-            CREDENTIAL_REGISTRY // SECURITY_PROFILES
-          </p>
-          <TypingTitle text="Professional Certifications" />
-          <div className="w-12 h-1 bg-[#3f51b5] mx-auto mt-4 rounded-full" />
-          <p className="mt-4 text-base text-gray-500 max-w-md mx-auto font-normal">
-            Completed professional achievements and structured path blueprints.
+          <InfiniteTypingHeader text="Professional Certifications" />
+          {/* Sleek Underline Gradient Accent */}
+          <div className="flex items-center justify-center gap-1.5 mt-2">
+            <div className="w-10 h-[2px] bg-gradient-to-r from-emerald-500/80 to-indigo-500/40 rounded-full" />
+            <div className="w-2 h-2 rounded-full bg-[#3f51b5] animate-ping" />
+            <div className="w-10 h-[2px] bg-gradient-to-r from-indigo-500/40 to-amber-500/80 rounded-full" />
+          </div>
+          <p className="mt-4 text-base text-gray-600 max-w-md mx-auto font-normal">
+            Completed professional <span className="text-blue-800 font-bold">achievements</span> and structured path blueprints.
           </p>
         </div>
 
         {/* ================= VERIFIED ATTAINED CREDENTIALS ================= */}
         <div className="mb-20">
           <motion.div 
-            initial={{ opacity: 0, x: -10 }}
-            whileInView={{ opacity: 1, x: 0 }}
+            initial={{ opacity: 0, scaleX: 0.9, originX: 0 }}
+            whileInView={{ opacity: 1, scaleX: 1 }}
             viewport={{ once: true }}
-            className="flex items-center gap-2.5 mb-8"
+            transition={{ duration: 0.5, ease: "easeOut" }}
+            className="inline-flex items-center gap-3 mb-8 px-4 py-2.5 bg-white border border-emerald-100/70 rounded-xl shadow-[0_2px_10px_rgba(16,185,129,0.02)] relative overflow-hidden group"
           >
-            <div className="w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-[0_0_8px_#10b981]" />
-            <h3 className="text-sm font-mono font-bold uppercase tracking-wider text-gray-400">
-              Active Verified Accreditations
+            <div className="absolute left-0 top-0 bottom-0 w-[3px] bg-emerald-500" />
+            <Terminal className="w-4 h-4 text-emerald-500 animate-pulse" />
+            <h3 className="text-xs font-mono font-extrabold uppercase tracking-widest text-gray-500">
+              Active <span className="text-emerald-600 font-mono shadow-emerald-100">Verified</span> Accreditations
             </h3>
+            <span className="flex h-2 w-2 relative ml-1">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+            </span>
           </motion.div>
+
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {done.map((cert, i) => (
               <CertCard key={i} cert={cert} index={i} onOpen={setOpenImg} />
@@ -191,16 +201,20 @@ export default function Certifications() {
         {/* ================= UPCOMING BLUEPRINT CREDS ================= */}
         <div>
           <motion.div 
-            initial={{ opacity: 0, x: -10 }}
-            whileInView={{ opacity: 1, x: 0 }}
+            initial={{ opacity: 0, scaleX: 0.9, originX: 0 }}
+            whileInView={{ opacity: 1, scaleX: 1 }}
             viewport={{ once: true }}
-            className="flex items-center gap-2.5 mb-8"
+            transition={{ duration: 0.5, ease: "easeOut", delay: 0.1 }}
+            className="inline-flex items-center gap-3 mb-8 px-4 py-2.5 bg-white border border-amber-100/70 rounded-xl shadow-[0_2px_10px_rgba(245,158,11,0.02)] relative overflow-hidden group"
           >
-            <div className="w-2.5 h-2.5 rounded-full bg-amber-500 shadow-[0_0_8px_#f59e0b]" />
-            <h3 className="text-sm font-mono font-bold uppercase tracking-wider text-gray-400">
-              Target Framework Roadmap
+            <div className="absolute left-0 top-0 bottom-0 w-[3px] bg-amber-500" />
+            <Cpu className="w-4 h-4 text-amber-500" />
+            <h3 className="text-xs font-mono font-extrabold uppercase tracking-widest text-gray-500">
+              Target <span className="text-amber-600 font-mono">Framework</span> Roadmap
             </h3>
+            <div className="w-1.5 h-1.5 rounded-full bg-amber-400/60 animate-bounce" />
           </motion.div>
+
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {planned.map((cert, i) => (
               <CertCard key={i} cert={cert} index={i} onOpen={setOpenImg} />
@@ -216,50 +230,21 @@ export default function Certifications() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-gray-950/40 backdrop-blur-md flex items-center justify-center z-50 p-4 md:p-6"
+            onClick={() => setOpenImg(null)}
+            className="fixed inset-0 bg-gray-950/40 backdrop-blur-md flex items-center justify-center z-50 p-4"
           >
             <motion.div
-              initial={{ scale: 0.97, y: 15 }}
-              animate={{ scale: 1, y: 0 }}
-              exit={{ scale: 0.97, y: 15 }}
-              className="relative bg-white border border-gray-100 shadow-2xl rounded-3xl max-w-3xl w-full p-5 flex flex-col items-center overflow-hidden"
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              className="relative max-w-3xl max-h-[85vh] bg-white p-2 rounded-2xl shadow-2xl overflow-hidden"
+              onClick={(e) => e.stopPropagation()}
             >
-              {/* Modal Window Top Header Bar Control */}
-              <div className="w-full flex justify-between items-center pb-3 border-b border-gray-100 mb-4 bg-white">
-                <span className="font-mono font-bold text-gray-900 text-xs tracking-wider uppercase flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-[#3f51b5] animate-ping" /> VALIDATED_CREDENTIAL_IMAGE
-                </span>
-                <button
-                  onClick={() => setOpenImg(null)}
-                  className="text-gray-400 hover:text-gray-900 font-extrabold bg-gray-50 border border-gray-100 w-8 h-8 flex items-center justify-center rounded-xl transition shadow-2xs"
-                >
-                  ✕
-                </button>
-              </div>
-
-              {/* Secure Media Rendering Area */}
-              <div className="w-full bg-gray-50 rounded-2xl p-2 border border-gray-100 flex items-center justify-center overflow-hidden">
-                <img
-                  src={openImg}
-                  alt="Security Verification Ledger"
-                  className="w-full rounded-xl max-h-[60vh] object-contain shadow-xs"
-                />
-              </div>
-
-              {/* Structural Footer Controls */}
-              <div className="w-full flex items-center justify-end gap-3 mt-4 pt-3 border-t border-gray-100">
-                <a
-                  href={openImg}
-                  download
-                  className="px-5 py-2.5 bg-[#3f51b5] text-white text-xs font-mono font-bold rounded-xl hover:bg-indigo-700 transition flex items-center gap-2 shadow-md shadow-indigo-600/10"
-                >
-                  <Download className="w-4 h-4" /> Download Certificate
-                </a>
-              </div>
+              <img src={openImg} alt="Certification Preview" className="max-w-full max-h-[80vh] object-contain rounded-xl" />
             </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
     </section>
-  );
+  ); 
 }

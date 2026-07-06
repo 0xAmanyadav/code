@@ -51,7 +51,7 @@ function InfiniteTypingHeader({ text }) {
   }, [charIndex, isDeleting, text]);
 
   return (
-    <h2 className="text-4xl md:text-5xl font-black tracking-tight text-gray-950 inline-block min-h-[60px]">
+    <h2 className="text-4xl md:text-4xl font-black tracking-tight text-gray-950 inline-block min-h-[60px]">
       {headerText}
       <span className="text-[#3f51b5] animate-pulse ml-1 font-extrabold">|</span>
     </h2>
@@ -127,7 +127,12 @@ export default function Skills() {
         {/* ================= HEADLINE HEADER WITH HERO LOOP TYPING ================= */}
         <div className="text-center mb-16">
           <InfiniteTypingHeader text="Skills & Expertise" />
-          
+           {/* 🛠️ FIXED: Centered Pulse Interactive Accent Divider Layout */}
+          <div className="flex items-center justify-center gap-1.5 mt-2">
+            <div className="w-10 h-[2px] bg-gradient-to-r from-emerald-500/80 to-indigo-500/40 rounded-full" />
+            <div className="w-2 h-2 rounded-full bg-[#3f51b5] animate-ping" />
+            <div className="w-10 h-[2px] bg-gradient-to-r from-indigo-500/40 to-amber-500/80 rounded-full" />
+          </div>
           <p className="mt-4 text-base md:text-lg text-gray-600 max-w-2xl mx-auto">
             Deep technical capability mapping across both <span className="text-red-500 font-semibold">Offensive Engineering</span> and <span className="text-[#3f51b5] font-semibold">Defensive Cyber Operations</span>.
           </p>

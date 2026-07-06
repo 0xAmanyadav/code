@@ -7,6 +7,28 @@ export default function BasicAbout() {
     { title: "Top 100", subtitle: "Active Player", details: "Global active metrics", icon: "🏆" },
   ];
 
+  // ================= ANIMATION VARIANTS =================
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.15, 
+        delayChildren: 0.1,
+      },
+    },
+  };
+
+  const itemLeft = {
+    hidden: { opacity: 0, x: 30 },
+    visible: { opacity: 1, x: 0, transition: { duration: 0.5, ease: "easeOut" } },
+  };
+
+  const itemUp = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } },
+  };
+
   return (
     <section
       id="about"
@@ -14,52 +36,54 @@ export default function BasicAbout() {
     >
       <div className="max-w-6xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
         
-        {/* ================= LEFT SIDE: PHOTO POP (NO BLUR) ================= */}
+        {/* ================= LEFT SIDE: PHOTO POP ================= */}
         <motion.div
-          initial={{ opacity: 0, y: 60, scale: 0.9 }}
+          initial={{ opacity: 0, y: 40, scale: 0.9 }}
           whileInView={{ opacity: 1, y: 0, scale: 1 }}
           transition={{ duration: 0.6, ease: "easeOut" }}
-          viewport={{ once: true, amount: 0.3 }} // Triggers early on scroll
+          // 🛠️ FIX: once: false kar diya taaki har baar animate ho
+          viewport={{ once: false, amount: 0.3 }}
           className="flex justify-center items-center"
         >
           <div className="relative p-2 bg-white rounded-full shadow-lg border border-gray-100">
             <img
-              src="/public/Tools_logo/a.png"
+              src="2.png" 
+              // src="Tools_logo/a.png" 
               alt="Aman Portfolio Portrait"
-              className="w-64 h-64 md:w-80 md:h-80 object-cover rounded-full border-4 border-white grayscale"
+              className="w-70 h-64 md:w-85 md:h-90 object-cover rounded-full border-4 border-white grayscale hover:grayscale-0 transition-all duration-500"
             />
           </div>
         </motion.div>
 
-        {/* ================= RIGHT SIDE: DETAILS SHOW (NO BLUR) ================= */}
+        {/* ================= RIGHT SIDE: STAGGERED REVEAL ================= */}
         <motion.div
-          initial={{ opacity: 0, x: 50 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.6, ease: "easeOut", delay: 0.1 }}
-          viewport={{ once: true, amount: 0.3 }}
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          // 🛠️ FIX: yahan bhi once: false kar diya
+          viewport={{ once: false, amount: 0.2 }}
           className="flex flex-col justify-center"
         >
-          <span className="font-mono text-xs font-bold tracking-[0.25em] text-[#3f51b5] uppercase mb-3 block">
-            SEC_DOSSIER // IDENTITY_VERIFIED
-          </span>
+          
 
-          <h2 className="text-4xl font-black tracking-tight text-gray-950 leading-tight">
+          <motion.h2 variants={itemLeft} className="text-4xl font-black tracking-tight text-gray-950 leading-tight">
             ABOUT AMAN, <br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#3f51b5] to-indigo-500">
               LEADER AT AMAN CYBER LAB
             </span>
-          </h2>
+          </motion.h2>
 
-          <p className="mt-4 text-gray-600 text-base leading-relaxed font-normal">
+          <motion.p variants={itemLeft} className="mt-4 text-gray-600 text-base leading-relaxed font-normal">
             I am a passionate cybersecurity professional with a defensive mindset. Specializing in threat intelligence, vulnerability assessment, and securing modern digital assets, my goal is to protect modern systems and resilient organizations in our digital world.
-          </p>
+          </motion.p>
 
           {/* METRIC CARDS */}
-          <div className="mt-8 grid grid-cols-1 sm:grid-cols-3 gap-4 w-full">
+          <motion.div variants={itemUp} className="mt-8 grid grid-cols-1 sm:grid-cols-3 gap-4 w-full">
             {stats.map((stat, index) => (
-              <div
+              <motion.div
                 key={index}
-                className="bg-white p-4 rounded-xl border border-gray-100 shadow-sm flex flex-col gap-1 hover:-translate-y-1 transition-all duration-300"
+                whileHover={{ y: -4, transition: { duration: 0.2 } }}
+                className="bg-white p-4 rounded-xl border border-gray-100 shadow-sm flex flex-col gap-1 transition-all duration-300 hover:shadow-md hover:border-indigo-100"
               >
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-semibold text-gray-400 tracking-wider uppercase">
@@ -73,12 +97,12 @@ export default function BasicAbout() {
                 <p className="text-[11px] text-gray-500 leading-tight mt-0.5">
                   {stat.details}
                 </p>
-              </div>
+              </motion.div>
             ))}
-          </div>
+          </motion.div>
 
           {/* ACTIVE STATUS PANEL */}
-          <div className="mt-6 p-4 bg-indigo-50/40 rounded-xl border border-indigo-100/50 flex items-start gap-3">
+          <motion.div variants={itemUp} className="mt-6 p-4 bg-indigo-50/40 rounded-xl border border-indigo-100/50 flex items-start gap-3">
             <span className="text-xl mt-0.5">🌐</span>
             <div>
               <h4 className="text-xs font-bold text-gray-950 uppercase tracking-wider font-mono">
@@ -88,7 +112,7 @@ export default function BasicAbout() {
                 Engaged in real-time monitoring of emerging threat vectors and vulnerabilities across modern platforms (HackTheBox, TryHackMe).
               </p>
             </div>
-          </div>
+          </motion.div>
         </motion.div>
 
       </div>

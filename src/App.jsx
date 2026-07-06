@@ -3,13 +3,13 @@ import { useEffect } from "react";
 
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
-import Writeups from "./sections/Writeups";
+// import Writeups from "./sections/Writeups";
 import Hero from "./sections/Hero";
 import About from "./sections/About";
 import Skills from "./sections/Skills";
 import Projects from "./sections/Projects";
 import Tools from "./sections/Tools";
-
+import Hackathon from "./sections/Hackathons";
 import Ranks from "./sections/Ranks";
 import Certifications from "./sections/Certifications";
 
@@ -42,28 +42,32 @@ function App() {
       <section id="about">
         <About />
       </section>
+       <section id="ranks">
+          <Ranks/>
+      </section>
       <section id="skills">
         <Skills />
       </section>
 
       <section id="tools">
-        <Tools />
-        <section id="ranks">
-          <Ranks/>
-        </section>
+        <Tools /> </section>
+     
         {/* <section id="livebadges">
           <LiveBadges/>
         </section> */}
-        <section id="projects">
+      <section id="projects">
           <Projects />
-        </section>
-        <section id="writeups">
-          <Writeups />
-        </section>
-       <section id="certification">
-          <Certifications />
-        </section>
       </section>
+      {/* <section id="writeups">
+          <Writeups />
+      </section> */}
+      <section id="certification">
+          <Certifications />
+      </section>
+      <section id="hackathons">
+        <Hackathon />
+      </section>
+      
       {/* <section id="contact">
         <Contact />
       </section> */}
