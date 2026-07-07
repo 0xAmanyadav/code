@@ -1,1 +1,27 @@
 @import "tailwindcss";
+
+/* 🛠️ TAILWIND v4 STRICT LAYOUT FIXES FOR AMAN */
+@layer base {
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box !important;
+  }
+
+  html, body {
+    width: 100% !important;
+    min-height: 100% !important;
+    overflow-x: hidden;
+    scroll-behavior: smooth;
+    background-color: #fafafa;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  #root {
+    width: 100% !important;
+    min-height: 100vh !important;
+    display: flex;
+    flex-direction: column;
+  }
+}
